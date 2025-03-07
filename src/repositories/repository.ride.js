@@ -1,5 +1,11 @@
-function List() {
-  const rides = [{ride_id: 1}, {ride_id: 2}, {ride_id: 3}];
+import { execute } from "../database/sqlite.js";
+
+async function List() {
+  
+  let sql = `select *
+  from rides`;
+  
+  const rides = await execute(sql, []);
   return rides;
 }
 
