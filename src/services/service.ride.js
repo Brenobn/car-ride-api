@@ -1,7 +1,7 @@
 import repositoryRide from "../repositories/repository.ride.js";
 
-function List() {
-  const rides = repositoryRide.List();
+async function List() {
+  const rides = await repositoryRide.List();
   return rides;
 }
 

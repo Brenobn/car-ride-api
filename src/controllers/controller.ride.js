@@ -1,9 +1,9 @@
 import serviceRide from "../services/service.ride.js";
 
-function List(request, response) {
+async function List(request, response) {
 
   try {
-    const rides = serviceRide.List();
+    const rides = await serviceRide.List();
     response.status(200).json(rides);
   } catch (error) {
     response.status(500).json({ error });
