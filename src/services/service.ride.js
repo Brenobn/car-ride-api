@@ -15,4 +15,9 @@ async function Delete(ride_id) {
   return ride;
 }
 
-export default { List, Insert, Delete };
+async function Finish(ride_id, passenger_user_id) {
+  const ride = await repositoryRide.Finish(ride_id, passenger_user_id);
+  return ride;
+}
+
+export default { List, Insert, Delete, Finish };
