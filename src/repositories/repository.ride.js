@@ -52,4 +52,12 @@ async function Delete(ride_id) {
   return { ride_id };
 }
 
-export default { List, Insert, Delete };
+async function Finish(ride_id, passenger_user_id) {
+  
+  let sql = `update rides set status = 'F' where ride_id = ? and passenger_user_id = ?`;
+  
+  await execute(sql, [ride_id, passenger_user_id]);
+  return { ride_id };
+}
+
+export default { List, Insert, Delete, Finish };
