@@ -12,6 +12,7 @@ app.use(cors());
 app.get("/rides", controllerRide.List);
 app.post("/rides", controllerRide.Insert);
 app.delete("/rides/:ride_id", controllerRide.Delete);
+app.put("/rides/:ride_id/finish", controllerRide.Finish);
 
 app.listen(3001, () => {
   console.log("App running - Port 3001");
