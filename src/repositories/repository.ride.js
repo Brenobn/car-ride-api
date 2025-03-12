@@ -3,32 +3,33 @@ import { execute } from "../database/sqlite.js";
 async function List(passenger_user_id, pickup_date, ride_id, driver_user_id, status) {
   let filter = []; 
   
-  let sql = `select *
-  from rides
-  where ride_id > 0 `;
+  let sql = `select r.*, u.name as passenger_name, u.phone as passenger_phone
+  from rides r
+  join users u on (u.user_id = r.passenger_user_id)
+  where r.ride_id > 0 `;
 
   if(passenger_user_id) {
-    sql = sql + " and passenger_user_id = ? ";
+    sql = sql + " and r.passenger_user_id = ? ";
     filter.push(passenger_user_id);
   }
 
   if(pickup_date) {
-    sql = sql + " and pickup_date = ? ";
+    sql = sql + " and r.pickup_date = ? ";
     filter.push(pickup_date);
   }
 
   if(ride_id) {
-    sql = sql + " and ride_id = ? ";
+    sql = sql + " and r.ride_id = ? ";
     filter.push(ride_id);
   }
 
   if(driver_user_id) {
-    sql = sql + " and driver_user_id = ? ";
+    sql = sql + " and r.driver_user_id = ? ";
     filter.push(driver_user_id);
   }
 
   if(status) {
-    sql = sql + " and status = ? ";
+    sql = sql + " and r.status = ? ";
     filter.push(status);
   }
   
