@@ -20,4 +20,19 @@ async function Finish(ride_id, passenger_user_id) {
   return ride;
 }
 
-export default { List, Insert, Delete, Finish };
+async function DriverList(driver_user_id) {
+  const rides = await repositoryRide.DriverList(driver_user_id);
+  return rides;
+}
+
+async function Accept(ride_id, driver_user_id) {
+  const ride = await repositoryRide.Accept(ride_id, driver_user_id);
+  return ride;
+}
+
+async function Cancel(ride_id) {
+  const ride = await repositoryRide.Cancel(ride_id);
+  return ride;
+}
+
+export default { List, Insert, Delete, Finish, DriverList, Accept, Cancel };
