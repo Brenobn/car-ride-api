@@ -61,4 +61,57 @@ async function Finish(request, response) {
   }
 }
 
-export default { List, Insert, Delete, Finish };
+async function DriverList(request, response) {
+
+  try {
+
+    const driver_user_id = request.params.driver_user_id;
+
+    const rides = await serviceRide.DriverList(driver_user_id);
+    response.status(200).json(rides);
+  } catch (error) {
+    response.status(500).json({ error });
+  }
+}
+
+async function RideDetail(request, response) {
+
+  try {
+
+    const ride_id = request.params.ride_id;
+
+    const rides = await serviceRide.List(null, null, ride_id, null, null);
+    response.status(200).json(rides[0]);
+  } catch (error) {
+    response.status(500).json({ error });
+  }
+}
+
+async function Accept(request, response) {
+
+  try {
+
+    const ride_id = request.params.ride_id;
+    const driver_user_id = request.body.driver_user_id;
+
+    const ride = await serviceRide.Accept(ride_id, driver_user_id);
+    response.status(200).json(ride);
+  } catch (error) {
+    response.status(500).json({ error });
+  }
+}
+
+async function Cancel(request, response) {
+
+  try {
+
+    const ride_id = request.params.ride_id;
+
+    const ride = await serviceRide.Cancel(ride_id);
+    response.status(200).json(ride);
+  } catch (error) {
+    response.status(500).json({ error });
+  }
+}
+
+export default { List, Insert, Delete, Finish, DriverList, RideDetail, Accept, Cancel };
