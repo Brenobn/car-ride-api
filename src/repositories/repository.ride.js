@@ -1,6 +1,6 @@
 import { execute } from "../database/sqlite.js";
 
-async function List(passenger_user_id, pickup_date, ride_id, driver_user_id, status) {
+async function List(passenger_user_id, pickup_date, ride_id, driver_user_id, status, status_not) {
   let filter = []; 
   
   let sql = `select r.*, 
@@ -35,6 +35,11 @@ async function List(passenger_user_id, pickup_date, ride_id, driver_user_id, sta
     sql = sql + " and r.status = ? ";
     filter.push(status);
   }
+
+  if(status_not) {
+    sql = sql + " and r.status <> ? ";
+    filter.push(status_not);
+  }
   
   const rides = await execute(sql, filter);
   return rides;
@@ -42,9 +47,13 @@ async function List(passenger_user_id, pickup_date, ride_id, driver_user_id, sta
 
 async function Insert(passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address) {
   
-  let sql = `insert into rides(passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address, pickup_date, status)values(?, ?, ?, ?, ?, CURRENT_DATE, 'P') returning ride_id`;
+  let dt = new Date().toISOString("pt-BR", {
+    timeZone: "America/Rio_de_Janeiro"
+  }).substring(0, 10);
+
+  let sql = `insert into rides(passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address, pickup_date, status)values(?, ?, ?, ?, ?, ?, 'P') returning ride_id`;
   
-  const ride = await execute(sql, [passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address]);
+  const ride = await execute(sql, [passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address, dt]);
   return ride[0];
 }
 
@@ -70,7 +79,7 @@ async function DriverList(driver_user_id) {
   u.name as passenger_name, u.phone as passenger_phone
   from rides r
   join users u on (u.user_id = r.passenger_user_id)
-  where DATE(r.pickup_date) = CURRENT_DATE
+  where r.pickup_date = CURRENT_DATE
   and r.driver_user_id = ?
 
   UNION
