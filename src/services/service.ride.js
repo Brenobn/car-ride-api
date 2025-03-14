@@ -20,7 +20,7 @@ async function Insert(passenger_user_id, pickup_address, pickup_latitude, pickup
   }
 
   // ------------------------------------------------------
-  
+
   const ride = await repositoryRide.Insert(passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address);
   return ride;
 }
@@ -41,7 +41,20 @@ async function DriverList(driver_user_id) {
 }
 
 async function Accept(ride_id, driver_user_id) {
+  
+  // Validação: O motorista só pode aceitar uma carona por vez
+  const dt = new Date().toISOString("pt-BR", {
+    timeZone: "America/Rio_de_Janeiro"
+  }).substring(0, 10);
+  const searchRides = await List(null, dt, null, driver_user_id, "A", null);
+  
+  if(searchRides.length > 0) {
+    throw "Você já possui uma corrida aceita hoje para: " + searchRides[0].passenger_name;
+  }
+  //----------------------------------------------------------
+  
   const ride = await repositoryRide.Accept(ride_id, driver_user_id);
+
   return ride;
 }
 
