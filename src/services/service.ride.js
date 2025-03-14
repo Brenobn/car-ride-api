@@ -1,11 +1,26 @@
 import repositoryRide from "../repositories/repository.ride.js";
 
-async function List(passenger_user_id, pickup_date, ride_id, driver_user_id, status) {
-  const rides = await repositoryRide.List(passenger_user_id, pickup_date, ride_id, driver_user_id, status);
+async function List(passenger_user_id, pickup_date, ride_id, driver_user_id, status, status_not) {
+
+  const rides = await repositoryRide.List(passenger_user_id, pickup_date, ride_id, driver_user_id, status, status_not);
   return rides;
 }
 
 async function Insert(passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address) {
+
+  //Validação : O usuario só pode pedir uma carona por vez
+
+  const dt = new Date().toISOString("pt-BR", {
+    timeZone: "America/Rio_de_Janeiro"
+  }).substring(0, 10);
+  const searchRides = await List(passenger_user_id, dt, null, null, null, "F");
+
+  if(searchRides.length > 0) {
+    throw "Você já tem uma corrida pendente hoje!"
+  }
+
+  // ------------------------------------------------------
+  
   const ride = await repositoryRide.Insert(passenger_user_id, pickup_address, pickup_latitude, pickup_longitude, dropoff_address);
   return ride;
 }
